@@ -7,6 +7,8 @@ public class Rat : MonoBehaviour
     [SerializeField] private GameObject _ratPrefab;
     [SerializeField] private SpriteRenderer _explosionPrefab;
 
+    public GameObject rat_mother;
+
     private Color[] _colors = new Color[3]
     {
         Color.yellow,
@@ -14,6 +16,10 @@ public class Rat : MonoBehaviour
         Color.blue
     };
     private int _colorIndex;
+
+    void Start()
+    {
+    }
 
     // ------------------------------------------------------------------------
     private void OnCollisionEnter2D(Collision2D collision)
@@ -34,6 +40,12 @@ public class Rat : MonoBehaviour
         //      color: first yellow, then red, then blue, then looping back
         //      around to yellow, etc.
 
+        if (collision.collider.tag.Equals("Attack"))
+        {
+            SpawnSmallRat();
+            SpawnExplosion(_colors[_colorIndex%3]);
+            _colorIndex++;
+        }
 
         // STEP 2 -------------------------------------------------------------
     }
@@ -50,20 +62,22 @@ public class Rat : MonoBehaviour
     // ------------------------------------------------------------------------
     private void SpawnSmallRat()
     {
+        for(int i=0;i<_spawnAmount;i++)
+        {
         GameObject rat = Instantiate(_ratPrefab);
 
         Vector3 pos = Random.onUnitSphere;
-        rat.transform.position += pos;
+        rat.transform.position =transform.position + pos;
 
         // STEP 3 -------------------------------------------------------------
         // Uncomment and fix the below lines to give the small rat a random
         //      rotation correctly.
         // Your game should look exaclty like the finished example.
-
-        //float randomAngle = Random.Range(0, 360);
-        //Vector3 rotationAngles = new Vector3(0, randomAngle, 0);
-        //rat.transform.Rotate(rotationAngles);
-
+        rat_mother.transform.localScale -=new Vector3(_shrinkAmount,_shrinkAmount,0);
+        float randomAngle = Random.Range(0, 360);
+        Vector3 rotationAngles = rat_mother.transform.position;
+        rat.transform.Rotate(rotationAngles);
+        }
         // STEP 3 -------------------------------------------------------------
     }
 }

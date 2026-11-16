@@ -13,7 +13,7 @@ public class Cat : MonoBehaviour
     [SerializeField] private float _attackCooldown;
 
     private bool _facingLeft;
-    private bool _isGrounded = true;
+    public bool _isGrounded = true;
     private float _attackTime;
 
     // ------------------------------------------------------------------------
@@ -64,7 +64,16 @@ public class Cat : MonoBehaviour
         //      collider.
         // You might want to check the Rigidbody2D scripting documentation
         //      for a useful variable :)
-        
+
+        if(_rigidbody.linearVelocity.y > 0)
+        {
+            _collider.enabled=false;
+        }
+        else
+        {
+            _collider.enabled=true;
+
+        }
 
         
         // STEP 1 -------------------------------------------------------------
@@ -73,9 +82,13 @@ public class Cat : MonoBehaviour
     // ------------------------------------------------------------------------
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
         string tag = collision.gameObject.tag;
+            Debug.Log("Tag：" + collision.gameObject.tag);
         if (tag.Equals("Ground") || tag.Equals("Platform"))
         {
+                    Debug.Log("碰到玩家了！");
+
             _isGrounded = true;
         }
     }
